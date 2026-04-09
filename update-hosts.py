@@ -144,6 +144,21 @@ def write_hosts(content):
         log(f"Warning: restorecon failed: {e.stderr.decode().strip()}")
 
 
+def flush_dns_cache():
+    """Flush systemd-resolved's DNS cache."""
+    try:
+        subprocess.run(
+            ["resolvectl", "flush-caches"],
+            check=True,
+            capture_output=True,
+        )
+        log("Flushed systemd-resolved cache")
+    except FileNotFoundError:
+        log("Warning: resolvectl not found — skipping DNS flush")
+    except subprocess.CalledProcessError as e:
+        log(f"Warning: resolvectl flush-caches failed: {e.stderr.decode().strip()}")
+
+
 def main():
     if os.geteuid() != 0:
         log("ERROR: Must be run as root")
@@ -185,6 +200,7 @@ def main():
 
     write_hosts(final)
     log(f"Successfully updated {HOSTS_FILE}")
+    flush_dns_cache()
 
 
 if __name__ == "__main__":
