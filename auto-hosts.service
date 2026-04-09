@@ -1,0 +1,14 @@
+[Unit]
+Description=Update /etc/hosts from Steven Black's hosts lists
+Documentation=https://github.com/StevenBlack/hosts
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/auto-hosts-update
+StandardOutput=journal
+StandardError=journal
+# Harden the service while still allowing it to write /etc/hosts
+ProtectSystem=false
+PrivateTmp=true

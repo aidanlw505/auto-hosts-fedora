@@ -1,0 +1,12 @@
+[Unit]
+Description=Daily update of /etc/hosts from Steven Black's hosts lists
+
+[Timer]
+# Run once a day; RandomizedDelaySec spreads updates across the hour
+OnCalendar=daily
+RandomizedDelaySec=3600
+# Run on next boot if a scheduled run was missed (e.g. machine was off)
+Persistent=true
+
+[Install]
+WantedBy=timers.target
